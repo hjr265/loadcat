@@ -1,0 +1,51 @@
+{{define "breadcrumb"}}
+	<li><a href="/balancers">Balancers</a></li>
+	<li><a href="/balancers/{{.Balancer.Id.Hex}}">{{.Balancer.Label}}</a></li>
+	<li><a href="#">Servers</a></li>
+	<li class="active">New</li>
+{{end}}
+
+{{define "content"}}
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			New Server
+		</div>
+		<div class="panel-body">
+			<br>
+			<form method="POST" class="form-horizontal">
+				<div class="form-group">
+					<label for="inpLabel" class="col-sm-2 control-label">Label</label>
+					<div class="col-sm-4">
+						<input type="text" name="label" class="form-control" id="inpLabel">
+					</div>
+				</div>
+
+				<br>
+
+				<div class="form-group">
+					<label for="inpAddress" class="col-sm-2 control-label">Address</label>
+					<div class="col-sm-4">
+						<input type="text" name="settings.address" class="form-control" id="inpAddress">
+					</div>
+				</div>
+
+				<br>
+
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-10">
+						<button type="submit" class="btn btn-primary">Create</button>
+						<a href="/balancers/{{.Balancer.Id.Hex}}" class="btn btn-default">Cancel</a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+{{end}}
+
+{{define "sidebar"}}
+
+{{end}}
+
+{{define "scripts"}}
+
+{{end}}

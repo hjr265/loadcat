@@ -1,0 +1,139 @@
+{{define "breadcrumb"}}
+	<li><a href="/balancers">Balancers</a></li>
+	<li><a href="/balancers/{{.Balancer.Id.Hex}}">{{.Balancer.Label}}</a></li>
+	<li class="active">Edit</li>
+{{end}}
+
+{{define "content"}}
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			Edit Balancer: {{.Balancer.Label}}
+		</div>
+		<div class="panel-body">
+			<br>
+			<form method="POST" class="form-horizontal">
+				<div class="form-group">
+					<label for="inpLabel" class="col-sm-2 control-label">Label</label>
+					<div class="col-sm-4">
+						<input type="text" name="label" class="form-control" id="inpLabel" value="{{.Balancer.Label}}">
+					</div>
+				</div>
+
+				<br>
+
+				<div class="form-group">
+					<label for="inpHostname" class="col-sm-2 control-label">Hostname</label>
+					<div class="col-sm-4">
+						<input type="text" name="settings.hostname" class="form-control" id="inpHostname" value="{{.Balancer.Settings.Hostname}}">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="inpPort" class="col-sm-2 control-label">Port</label>
+					<div class="col-sm-4">
+						<input type="number" name="settings.port" class="form-control" id="inpPort" value="{{.Balancer.Settings.Port}}">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="inpProtocol" class="col-sm-2 control-label">Protocol</label>
+					<div class="col-sm-4">
+						<select name="settings.protocol" class="form-control" id="inpProtocol">
+							{{range $proto := .Protocols}}
+								<option value="{{$proto}}" {{if eq $proto $.Balancer.Settings.Protocol}}selected{{end}}>{{$proto.Label}}</option>
+							{{end}}
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="inpAlgorithm" class="col-sm-2 control-label">Algorithm</label>
+					<div class="col-sm-4">
+						<select name="settings.algorithm" class="form-control" id="inpAlgorithm">
+							{{range $algo := .Algorithms}}
+								<option value="{{$algo}}" {{if eq $algo $.Balancer.Settings.Algorithm}}selected{{end}}>{{$algo.Label}}</option>
+							{{end}}
+						</select>
+					</div>
+				</div>
+
+				<br>
+
+				<fieldset id="setSSLOptions" class="hidden">
+					<div class="form-group">
+						<label for="inpCipherSuite" class="col-sm-2 control-label">Cipher Suite</label>
+						<div class="col-sm-4">
+							<select name="settings.ssl_options.cipher_suite" class="form-control" id="inpCipherSuite">
+								{{range $cs := .CipherSuites}}
+									<option value="{{$cs}}" {{if eq $cs $.Balancer.Settings.SSLOptions.CipherSuite}}selected{{end}}>{{$cs.Label}}</option>
+								{{end}}
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="inpCertificate" class="col-sm-2 control-label">Certificate</label>
+						{{if .Balancer.Settings.SSLOptions.Fingerprint}}
+							<div class="col-sm-4">
+								<input type="text" class="form-control" id="inpFingerprint" value="{{printf "% x" .Balancer.Settings.SSLOptions.Fingerprint}}" readonly>
+								<textarea name="settings.ssl_options.certificate" class="form-control {{if .Balancer.Settings.SSLOptions.Fingerprint}}hidden{{end}}" id="inpCertificate"  {{if .Balancer.Settings.SSLOptions.Fingerprint}}disabled{{end}}></textarea>
+							</div>
+							<div class="col-sm-4">
+								<p class="form-control-static">
+									<a href="#" id="btnReplaceCertificate">Replace</a>
+								</p>
+							</div>
+						{{else}}
+							<div class="col-sm-4">
+								<textarea name="settings.ssl_options.certificate" class="form-control" id="inpCertificate"  {{if .Balancer.Settings.SSLOptions.Fingerprint}}disabled{{end}}></textarea>
+							</div>
+						{{end}}
+					</div>
+					<div class="form-group {{if .Balancer.Settings.SSLOptions.Fingerprint}}hidden{{end}}">
+						<label for="inpPrivateKey" class="col-sm-2 control-label">Private Key</label>
+						<div class="col-sm-4">
+							<textarea name="settings.ssl_options.private_key" class="form-control" id="inpPrivateKey" {{if .Balancer.Settings.SSLOptions.Fingerprint}}disabled{{end}}></textarea>
+						</div>
+					</div>
+
+					<br>
+				</fieldset>
+
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-10">
+						<button type="submit" class="btn btn-primary">Update</button>
+						<a href="/balancers/{{.Balancer.Id.Hex}}" class="btn btn-default">Cancel</a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+{{end}}
+
+{{define "sidebar"}}
+
+{{end}}
+
+{{define "scripts"}}
+	<script type="text/javascript">
+		$('#inpProtocol').on('change', function() {
+			switch($(this).val()) {
+				case 'http':
+					$('#setSSLOptions').addClass('hidden')
+					break
+				case 'https':
+					$('#setSSLOptions').removeClass('hidden')
+					break
+			}
+		})
+		.trigger('change')
+
+		$('#btnReplaceCertificate').on('click', function(event) {
+			event.preventDefault()
+			$('#inpCertificate').removeClass('hidden').removeAttr('disabled')
+			$('#inpPrivateKey').removeAttr('disabled').closest('.form-group').removeClass('hidden')
+			$('#inpFingerprint').detach()
+			$('#btnReplaceCertificate').closest('div').detach()
+		})
+
+		{{if .Balancer.Settings.SSLOptions.Fingerprint}}
+			$('#inpDNSNames ')
+		{{end}}
+	</script>
+{{end}}

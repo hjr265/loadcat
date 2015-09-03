@@ -1,0 +1,47 @@
+{{define "breadcrumb"}}
+	<li class="active">Balancers</li>
+{{end}}
+
+{{define "content"}}
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			Balancers
+		</div>
+		<div class="panel-body">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Balancer</th>
+						<th>Protocol</th>
+						<th>Algorithm</th>
+						<th>Status</th>
+					</tr>
+				</thead>
+				<tbody>
+					{{range $bal := .Balancers}}
+						<tr>
+							<td>
+								<a href="/balancers/{{$bal.Id.Hex}}">{{$bal.Label}}</a>
+							</td>
+							<td>{{$bal.Settings.Protocol.Label}}</td>
+							<td>{{$bal.Settings.Algorithm.Label}}</td>
+							<td>Unknown</td>
+						</tr>
+					{{end}}
+				</tbody>
+			</table>
+			<br>
+			<div>
+				<a href="/balancers/new" class="btn btn-primary btn-xs">New Balancer</a>
+			</div>
+		</div>
+	</div>
+{{end}}
+
+{{define "sidebar"}}
+
+{{end}}
+
+{{define "scripts"}}
+
+{{end}}
