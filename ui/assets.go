@@ -6,13 +6,9 @@ import (
 	"net/http"
 )
 
-func ServeAsset(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, r.URL.Path)
-}
-
 func init() {
 	Router.NewRoute().
 		Methods("GET").
 		PathPrefix("/assets").
-		Handler(http.StripPrefix("/assets", http.HandlerFunc(ServeAsset)))
+		Handler(http.StripPrefix("/assets", http.FileServer(http.Dir("./ui/assets"))))
 }

@@ -45,6 +45,18 @@ func (f *Feline) Commit(bal *data.Balancer) error {
 
 	dir := filepath.Join(f.base, bal.Id.Hex())
 	_, err := os.Stat(dir)
+
+	if bal.Deleted {
+		if err != nil && os.IsNotExist(err) {
+			return nil
+		}
+		err = os.RemoveAll(dir)
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+
 	if err != nil && os.IsNotExist(err) {
 		err = os.MkdirAll(dir, 0777)
 		if err != nil {

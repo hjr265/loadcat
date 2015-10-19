@@ -15,6 +15,8 @@ type Balancer struct {
 	Id       bson.ObjectId
 	Label    string
 	Settings BalancerSettings
+
+	Deleted bool
 }
 
 type BalancerSettings struct {
@@ -119,5 +121,26 @@ func (l *Balancer) Put() error {
 			return err
 		}
 		return b.Put([]byte(l.Id.Hex()), p)
+	})
+}
+
+func (l *Balancer) Del() error {
+	return DB.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("servers"))
+		c := b.Cursor()
+		for k, v := c.First(); k != nil; k, v = c.Next() {
+			srv := Server{}
+			err := bson.Unmarshal(v, &srv)
+			if err != nil {
+				return err
+			}
+			if srv.BalancerId.Hex() != l.Id.Hex() {
+				continue
+			}
+			b.Delete(k)
+		}
+		b = tx.Bucket([]byte("balancers"))
+		l.Deleted = true
+		return b.Delete([]byte(l.Id.Hex()))
 	})
 }
