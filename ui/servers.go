@@ -176,6 +176,39 @@ func HandleServerUpdate(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/balancers/"+srv.BalancerId.Hex(), http.StatusSeeOther)
 }
 
+func HandleServerDelete(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	if !bson.IsObjectIdHex(vars["id"]) {
+		http.Error(w, "Not Found", http.StatusNotFound)
+		return
+	}
+	srv, err := data.GetServer(bson.ObjectIdHex(vars["id"]))
+	if err != nil {
+		panic(err)
+	}
+	if srv == nil {
+		http.Error(w, "Not Found", http.StatusNotFound)
+		return
+	}
+
+	bal, err := srv.Balancer()
+	if err != nil {
+		panic(err)
+	}
+
+	err = srv.Del()
+	if err != nil {
+		panic(err)
+	}
+
+	err = feline.Commit(bal)
+	if err != nil {
+		panic(err)
+	}
+
+	http.Redirect(w, r, "/balancers/"+bal.Id.Hex(), http.StatusSeeOther)
+}
+
 func init() {
 	Router.NewRoute().
 		Methods("GET").
@@ -197,4 +230,8 @@ func init() {
 		Methods("POST").
 		Path("/servers/{id}/edit").
 		Handler(http.HandlerFunc(HandleServerUpdate))
+	Router.NewRoute().
+		Methods("POST").
+		Path("/servers/{id}/delete").
+		Handler(http.HandlerFunc(HandleServerDelete))
 }

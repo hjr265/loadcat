@@ -17,6 +17,7 @@
 						<th>Weight</th>
 						<th>Availability</th>
 						<th>Status</th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -29,6 +30,9 @@
 							<td>{{$srv.Settings.Weight}}</td>
 							<td>{{$srv.Settings.Availability.Label}}</td>
 							<td>Unknown</td>
+							<td>
+								<a href="/servers/{{$srv.Id.Hex}}/delete" data-method="POST">Delete</a>
+							</td>
 						</tr>
 					{{end}}
 				</tbody>

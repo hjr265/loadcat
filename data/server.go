@@ -12,6 +12,8 @@ type Server struct {
 	BalancerId bson.ObjectId
 	Label      string
 	Settings   ServerSettings
+
+	Deleted bool
 }
 
 type ServerSettings struct {
@@ -80,5 +82,13 @@ func (s *Server) Put() error {
 			return err
 		}
 		return b.Put([]byte(s.Id.Hex()), p)
+	})
+}
+
+func (s *Server) Del() error {
+	return DB.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("servers"))
+		s.Deleted = true
+		return b.Delete([]byte(s.Id.Hex()))
 	})
 }
