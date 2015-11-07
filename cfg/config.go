@@ -20,6 +20,12 @@ var Current = struct {
 			Service string
 		}
 	}
+	Haproxy struct {
+		Mode    string
+		Systemd struct {
+			Service string
+		}
+	}
 }{}
 
 func LoadFile(name string) error {
@@ -54,4 +60,6 @@ func init() {
 	Current.Core.Driver = "nginx"
 	Current.Nginx.Mode = "systemd"
 	Current.Nginx.Systemd.Service = "nginx.service"
+	Current.Haproxy.Mode = "manual"
+	Current.Haproxy.Systemd.Service = ""
 }

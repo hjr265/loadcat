@@ -14,6 +14,7 @@ import (
 	"github.com/hjr265/loadcat/cfg"
 	"github.com/hjr265/loadcat/data"
 	"github.com/hjr265/loadcat/feline"
+	_ "github.com/hjr265/loadcat/feline/haproxy"
 	_ "github.com/hjr265/loadcat/feline/nginx"
 	"github.com/hjr265/loadcat/ui"
 )
