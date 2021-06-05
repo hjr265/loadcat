@@ -1,0 +1,36 @@
+# github.com/boltdb/bolt v1.3.1
+## explicit
+github.com/boltdb/bolt
+# github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf
+## explicit
+github.com/coreos/go-systemd/dbus
+# github.com/godbus/dbus v4.1.0+incompatible
+## explicit
+github.com/godbus/dbus
+# github.com/gorilla/mux v1.8.0
+## explicit
+github.com/gorilla/mux
+# github.com/gorilla/schema v1.2.0
+## explicit
+github.com/gorilla/schema
+# github.com/kylelemons/godebug v1.1.0
+## explicit
+# github.com/naoina/go-stringutil v0.1.0
+## explicit
+github.com/naoina/go-stringutil
+# github.com/naoina/toml v0.1.1
+## explicit
+github.com/naoina/toml
+github.com/naoina/toml/ast
+# golang.org/x/sys v0.0.0-20210603125802-9665404d3644
+## explicit
+golang.org/x/sys/internal/unsafeheader
+golang.org/x/sys/unix
+# gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c
+## explicit
+# gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22
+## explicit
+gopkg.in/mgo.v2/bson
+gopkg.in/mgo.v2/internal/json
+# gopkg.in/yaml.v2 v2.4.0
+## explicit
