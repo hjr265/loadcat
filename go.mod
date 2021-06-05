@@ -4,7 +4,8 @@ go 1.16
 
 require (
 	github.com/boltdb/bolt v1.3.1
-	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf
+	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf // indirect
+	github.com/coreos/go-systemd/v22 v22.3.2
 	github.com/godbus/dbus v4.1.0+incompatible // indirect
 	github.com/gorilla/mux v1.8.0
 	github.com/gorilla/schema v1.2.0

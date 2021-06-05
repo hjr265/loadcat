@@ -3,10 +3,13 @@
 github.com/boltdb/bolt
 # github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf
 ## explicit
-github.com/coreos/go-systemd/dbus
+# github.com/coreos/go-systemd/v22 v22.3.2
+## explicit
+github.com/coreos/go-systemd/v22/dbus
 # github.com/godbus/dbus v4.1.0+incompatible
 ## explicit
-github.com/godbus/dbus
+# github.com/godbus/dbus/v5 v5.0.4
+github.com/godbus/dbus/v5
 # github.com/gorilla/mux v1.8.0
 ## explicit
 github.com/gorilla/mux
