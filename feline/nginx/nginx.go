@@ -71,7 +71,7 @@ type Nginx struct {
 	Cmd     *exec.Cmd
 }
 
-func (n Nginx) Generate(dir string, bal *data.Balancer) error {
+func (n *Nginx) Generate(dir string, bal *data.Balancer) error {
 	n.Lock()
 	defer n.Unlock()
 
