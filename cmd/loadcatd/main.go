@@ -30,6 +30,10 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	err = feline.Start()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	err = data.OpenDB(filepath.Join(cfg.Current.Core.Dir, "loadcat.db"))
 	if err != nil {

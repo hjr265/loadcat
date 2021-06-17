@@ -6,6 +6,7 @@ import (
 	"errors"
 	"io/ioutil"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"sync"
 	"text/template"
@@ -64,6 +65,7 @@ type Nginx struct {
 	sync.Mutex
 
 	Systemd *dbus.Conn
+	Cmd     *exec.Cmd
 }
 
 func (n Nginx) Generate(dir string, bal *data.Balancer) error {
@@ -103,7 +105,26 @@ func (n Nginx) Generate(dir string, bal *data.Balancer) error {
 	return nil
 }
 
-func (n Nginx) Reload() error {
+func (n *Nginx) Start() error {
+	n.Lock()
+	defer n.Unlock()
+
+	switch cfg.Current.Nginx.Mode {
+	case "systemd":
+		return nil
+
+	case "exec":
+		n.Cmd = exec.Command("nginx")
+		n.Cmd.Stdout = os.Stdout
+		n.Cmd.Stderr = os.Stderr
+		return n.Cmd.Start()
+
+	default:
+		return errors.New("unknown Nginx mode")
+	}
+}
+
+func (n *Nginx) Reload() error {
 	n.Lock()
 	defer n.Unlock()
 
@@ -126,13 +147,17 @@ func (n Nginx) Reload() error {
 
 		return nil
 
+	case "exec":
+		cmd := exec.Command("nginx", "-s", "reload")
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		return cmd.Run()
+
 	default:
 		return errors.New("unknown Nginx mode")
 	}
-
-	panic("unreachable")
 }
 
 func init() {
-	feline.Register("nginx", Nginx{})
+	feline.Register("nginx", &Nginx{})
 }

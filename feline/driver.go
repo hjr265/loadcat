@@ -8,6 +8,7 @@ import (
 
 type Driver interface {
 	Generate(string, *data.Balancer) error
+	Start() error
 	Reload() error
 }
 

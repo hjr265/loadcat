@@ -39,6 +39,11 @@ func (f *Feline) SetBase(base string) error {
 	return nil
 }
 
+func (f *Feline) Start() error {
+	drv := Drivers[cfg.Current.Core.Driver]
+	return drv.Start()
+}
+
 func (f *Feline) Commit(bal *data.Balancer) error {
 	f.Lock()
 	defer f.Unlock()
@@ -68,6 +73,10 @@ var DefaultFeline = New()
 
 func SetBase(dir string) error {
 	return DefaultFeline.SetBase(dir)
+}
+
+func Start() error {
+	return DefaultFeline.Start()
 }
 
 func Commit(bal *data.Balancer) error {
