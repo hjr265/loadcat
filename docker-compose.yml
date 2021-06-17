@@ -2,7 +2,7 @@ version: '3.8'
 services:
   web:
     build:
-      context: ./docker
+      context: ./docker/dev
       dockerfile: Dockerfile
     ports:
       - "0.0.0.0:26590:26590"
