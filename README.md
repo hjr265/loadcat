@@ -4,36 +4,20 @@ Loadcat is an Nginx configurator that allows you to use Nginx as a load balancer
 
 ## Installation
 
-### Arch Linux
+### Docker Image
 
-Install Loadcat using a pre-built .pkg file:
-
-~~~
-$ wget https://github.com/hjr265/loadcat/releases/download/v0.1-alpha.1/loadcat-0.1_alpha.1-1-x86_64.pkg.tar.xz
-# pacman -U loadcat-0.1_alpha.1-1-x86_64.pkg.tar.xz
-~~~
-
-Or, from AUR using Yaourt:
+Install Loadcat using Docker:
 
 ~~~
-$ yaourt loadcat
-~~~
-
-Or, manually:
-
-~~~
-$ git clone https://aur.archlinux.org/loadcat.git
-$ cd loadcat
-$ makepkg
-# pacman -U loadcat-0.1_alpha.1-1-x86_64.pkg.tar.xz
+# docker run -p 26590:26590 -p 80:80 -p 443:443 loadcat/base:v0.1.0
 ~~~
 
 ### From Source
 
-Install Loadcat using the go get command:
+Install Loadcat using the `go install` command:
 
 ```
-$ go get github.com/hjr265/loadcat/cmd/loadcatd
+$ go install github.com/hjr265/loadcat/cmd/loadcatd
 ```
 
 ## Usage
