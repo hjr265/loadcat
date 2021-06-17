@@ -54,6 +54,8 @@ func HandleBalancerCreate(w http.ResponseWriter, r *http.Request) {
 
 	bal := data.Balancer{}
 	bal.Label = body.Label
+	bal.Settings.Hostname = "example.com"
+	bal.Settings.Port = 80
 	err = bal.Put()
 	if err != nil {
 		panic(err)
