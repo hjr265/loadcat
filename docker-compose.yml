@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  web:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile
+    ports:
+      - "0.0.0.0:26590:26590"
+      - "0.0.0.0:26080:80"
+    volumes:
+      - loadcat:/var/lib/loadcat
+      - ./loadcatd:/usr/bin/loadcatd
+      - ./ui/templates:/var/lib/loadcat/ui/templates
+    working_dir: /var/lib/loadcat
+    command: loadcatd -config /etc/loadcat.conf
+
+volumes:
+  loadcat:
+    driver: "local"
