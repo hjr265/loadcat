@@ -26,6 +26,9 @@ upstream {{.Balancer.Id.Hex}} {
 		ip_hash;
 	{{end}}
 
+	{{if eq (len .Balancer.Servers) 0}}
+		server  127.0.0.1:80 down;
+	{{end}}
 	{{range $srv := .Balancer.Servers}}
 		server  {{$srv.Settings.Address}} weight={{$srv.Settings.Weight}} {{if eq $srv.Settings.Availability "available"}}{{else if eq $srv.Settings.Availability "backup"}}backup{{else if eq $srv.Settings.Availability "unavailable"}}down{{end}};
 	{{end}}
