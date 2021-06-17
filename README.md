@@ -9,7 +9,7 @@ Loadcat is an Nginx configurator that allows you to use Nginx as a load balancer
 Install Loadcat using Docker:
 
 ~~~
-# docker run -p 26590:26590 -p 80:80 -p 443:443 loadcat/base:v0.1.0
+# docker run -p 26590:26590 -p 80:80 -p 443:443 loadcat/base:v0.1.1
 ~~~
 
 ### From Source
