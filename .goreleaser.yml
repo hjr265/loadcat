@@ -1,0 +1,36 @@
+before:
+  hooks:
+    - go mod tidy
+builds:
+  - main: ./cmd/loadcatd
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+archives:
+  - replacements:
+      darwin: Darwin
+      linux: Linux
+      windows: Windows
+      386: i386
+      amd64: x86_64
+    files:
+      - LICENSE
+      - ui/templates/*
+dockers:
+  - image_templates:
+      - loadcat/base:{{ .Tag }}
+    dockerfile: docker/base/Dockerfile
+    extra_files:
+      - docker/base/
+      - ui/templates/
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ .Tag }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
