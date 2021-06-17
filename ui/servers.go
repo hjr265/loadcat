@@ -67,6 +67,7 @@ func HandleServerCreate(w http.ResponseWriter, r *http.Request) {
 	srv.BalancerId = bal.Id
 	srv.Label = body.Label
 	srv.Settings.Address = body.Settings.Address
+	srv.Settings.Weight = 1
 	err = srv.Put()
 	if err != nil {
 		panic(err)
