@@ -17,7 +17,7 @@ Install Loadcat using Docker:
 Install Loadcat using the `go install` command:
 
 ```
-$ go install github.com/hjr265/loadcat/cmd/loadcatd
+$ go install github.com/hjr265/loadcat/cmd/loadcatd@latest
 ```
 
 ## Usage
