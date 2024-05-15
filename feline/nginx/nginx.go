@@ -48,6 +48,11 @@ server {
 		ssl_certificate_key  {{.Dir}}/server.key;
 	{{end}}
 
+	{{if eq .Balancer.Settings.SSLOptions.SSLVerify "on"}}
+		ssl_client_certificate /var/lib/loadcat/out/{{.Balancer.Id.Hex}}/ca.crt;
+		ssl_verify_client on;
+	{{end}}
+
 	location / {
 		proxy_set_header  Host $host;
 		proxy_set_header  X-Real-IP $remote_addr;
@@ -100,6 +105,13 @@ func (n *Nginx) Generate(dir string, bal *data.Balancer) error {
 			return err
 		}
 		err = ioutil.WriteFile(filepath.Join(dir, "server.key"), bal.Settings.SSLOptions.PrivateKey, 0666)
+		if err != nil {
+			return err
+		}
+	}
+
+	if bal.Settings.SSLOptions.SSLVerify == "on" {
+		err = ioutil.WriteFile(filepath.Join(dir, "ca.crt"), bal.Settings.SSLVerifyClient.ClientCertificate, 0666)
 		if err != nil {
 			return err
 		}
