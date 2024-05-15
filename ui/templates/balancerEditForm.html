@@ -91,7 +91,23 @@
 							<textarea name="settings.ssl_options.private_key" class="form-control" id="inpPrivateKey" {{if .Balancer.Settings.SSLOptions.Fingerprint}}disabled{{end}}></textarea>
 						</div>
 					</div>
-
+					<div class="form-group">
+						<label for="inpSSLVerify" class="col-sm-2 control-label">SSL Verify Client</label>
+						<div class="col-sm-4">
+							<select name="settings.ssl_options.sslverify" class="form-control" id="inpSSLVerify">
+								{{range $sslverify := .SSLVerifys}}
+									<option value="{{$sslverify}}" {{if eq $sslverify $.Balancer.Settings.SSLOptions.SSLVerify}}selected{{end}}>{{$sslverify.Label}}</option>
+								{{end}}
+							</select>
+						</div>
+					</div>
+					<div id="clientCertificateGroup" class="form-group">
+						<label for="inpClientCertificate" class="col-sm-2 control-label">Client Certificate</label>
+						<div class="col-sm-4">
+							<input type="text" class="form-control" id="inpClientCertificate" value="{{printf "% x" .Balancer.Settings.SSLVerifyClient.ClientCertificate}}" readonly>
+							<textarea name="settings.sslverifyclient.clientcertificate" class="form-control" id="inpClientCertificate"></textarea>
+						</div>
+					</div>					
 					<br>
 				</fieldset>
 
@@ -111,29 +127,32 @@
 {{end}}
 
 {{define "scripts"}}
-	<script type="text/javascript">
-		$('#inpProtocol').on('change', function() {
-			switch($(this).val()) {
-				case 'http':
-					$('#setSSLOptions').addClass('hidden')
-					break
-				case 'https':
-					$('#setSSLOptions').removeClass('hidden')
-					break
-			}
-		})
-		.trigger('change')
+<script type="text/javascript">
+$('#inpProtocol').on('change', function() {
+    switch($(this).val()) {
+        case 'http':
+            $('#setSSLOptions').addClass('hidden');
+            break;
+        case 'https':
+            $('#setSSLOptions').removeClass('hidden');
+            break;
+    }
+}).trigger('change');
 
-		$('#btnReplaceCertificate').on('click', function(event) {
-			event.preventDefault()
-			$('#inpCertificate').removeClass('hidden').removeAttr('disabled')
-			$('#inpPrivateKey').removeAttr('disabled').closest('.form-group').removeClass('hidden')
-			$('#inpFingerprint').detach()
-			$('#btnReplaceCertificate').closest('div').detach()
-		})
+$('#inpSSLVerify').on('change', function() {
+    if ($(this).val() === 'on') {
+        $('#clientCertificateGroup').removeClass('hidden');
+    } else {
+        $('#clientCertificateGroup').addClass('hidden');
+    }
+}).trigger('change');
 
-		{{if .Balancer.Settings.SSLOptions.Fingerprint}}
-			$('#inpDNSNames ')
-		{{end}}
-	</script>
+$('#btnReplaceCertificate').on('click', function(event) {
+    event.preventDefault();
+    $('#inpCertificate').removeClass('hidden').removeAttr('disabled');
+    $('#inpPrivateKey').removeAttr('disabled').closest('.form-group').removeClass('hidden');
+    $('#inpFingerprint').detach();
+    $('#btnReplaceCertificate').closest('div').detach();
+});
+</script>
 {{end}}
