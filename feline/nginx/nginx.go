@@ -49,7 +49,7 @@ server {
 	{{end}}
 
 	{{if eq .Balancer.Settings.SSLOptions.SSLVerify "on"}}
-		ssl_client_certificate {{.Dir}}/ca.crt;
+		ssl_client_certificate /var/lib/loadcat/out/{{.Balancer.Id.Hex}}/ca.crt;
 		ssl_verify_client on;
 	{{end}}
 
