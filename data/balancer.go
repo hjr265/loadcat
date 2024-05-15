@@ -6,7 +6,7 @@ import (
 	"crypto/sha1"
 	"crypto/x509"
 	"encoding/pem"
-
+	"os"
 	"github.com/boltdb/bolt"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -74,6 +74,30 @@ func GetBalancer(id bson.ObjectId) (*Balancer, error) {
 		return nil, err
 	}
 	return bal, nil
+}
+
+func (b *Balancer) Delete() error {
+    servers, err := b.Servers()
+    if err != nil {
+        return err
+    }
+    for _, server := range servers {
+        err := server.Delete()
+        if err != nil {
+            return err
+        }
+    }
+
+    dirPath := "/var/lib/loadcat/out/" + b.Id.Hex()
+    err = os.RemoveAll(dirPath)
+    if err != nil {
+        return err
+    }
+
+    return DB.Update(func(tx *bolt.Tx) error {
+        bucket := tx.Bucket([]byte("balancers"))
+        return bucket.Delete([]byte(b.Id.Hex()))
+    })
 }
 
 func (l *Balancer) Servers() ([]Server, error) {

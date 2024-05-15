@@ -180,6 +180,25 @@ func HandleBalancerUpdate(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/balancers/"+bal.Id.Hex(), http.StatusSeeOther)
 }
 
+func HandleBalancerDelete(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	if !bson.IsObjectIdHex(vars["id"]) {
+		http.Error(w, "Not Found", http.StatusNotFound)
+		return
+	}
+	bal, err := data.GetBalancer(bson.ObjectIdHex(vars["id"]))
+	if err != nil {
+		panic(err)
+	}
+
+	err = bal.Delete()
+	if err != nil {
+		panic(err)
+	}
+
+	http.Redirect(w, r, "/balancers", http.StatusSeeOther)
+}
+
 func init() {
 	Router.NewRoute().
 		Methods("GET").
@@ -205,4 +224,8 @@ func init() {
 		Methods("POST").
 		Path("/balancers/{id}/edit").
 		Handler(http.HandlerFunc(HandleBalancerUpdate))
+	Router.NewRoute().
+		Methods("POST").
+		Path("/balancers/{id}/delete").
+		Handler(http.HandlerFunc(HandleBalancerDelete))
 }
