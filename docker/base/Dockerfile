@@ -1,4 +1,4 @@
-FROM nginx:1.21.0
+FROM nginx:stable
 
 ADD docker/base/nginx.conf /etc/nginx/nginx.conf
 ADD docker/base/loadcat.conf /etc/loadcat.conf
