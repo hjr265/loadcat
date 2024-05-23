@@ -43,7 +43,6 @@ server {
 	server_name  {{.Balancer.Settings.Hostname}};
 
 	{{if eq .Balancer.Settings.Protocol "https"}}
-		ssl                  on;
 		ssl_certificate      {{.Dir}}/server.crt;
 		ssl_certificate_key  {{.Dir}}/server.key;
 	{{end}}
