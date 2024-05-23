@@ -43,9 +43,15 @@ server {
 	server_name  {{.Balancer.Settings.Hostname}};
 
 	{{if eq .Balancer.Settings.Protocol "https"}}
-		ssl                  on;
-		ssl_certificate      {{.Dir}}/server.crt;
-		ssl_certificate_key  {{.Dir}}/server.key;
+
+		ssl_certificate      /var/lib/loadcat/out/{{.Balancer.Id.Hex}}/server.crt;
+		ssl_certificate_key  /var/lib/loadcat/out/{{.Balancer.Id.Hex}}/server.key;
+
+	{{end}}
+
+	{{if eq .Balancer.Settings.SSLOptions.SSLVerify "on"}}
+		ssl_client_certificate /var/lib/loadcat/out/{{.Balancer.Id.Hex}}/ca.crt;
+		ssl_verify_client on;
 	{{end}}
 
 	location / {
@@ -100,6 +106,13 @@ func (n *Nginx) Generate(dir string, bal *data.Balancer) error {
 			return err
 		}
 		err = ioutil.WriteFile(filepath.Join(dir, "server.key"), bal.Settings.SSLOptions.PrivateKey, 0666)
+		if err != nil {
+			return err
+		}
+	}
+
+	if bal.Settings.SSLOptions.SSLVerify == "on" {
+		err = ioutil.WriteFile(filepath.Join(dir, "ca.crt"), bal.Settings.SSLVerifyClient.ClientCertificate, 0666)
 		if err != nil {
 			return err
 		}

@@ -23,15 +23,21 @@ type BalancerSettings struct {
 	Protocol   Protocol
 	Algorithm  Algorithm
 	SSLOptions SSLOptions
+	SSLVerifyClient SSLVerifyClient
 }
 
 type SSLOptions struct {
 	CipherSuite CipherSuite
 	Certificate []byte
 	PrivateKey  []byte
-
+	SSLVerify	SSLVerify
 	DNSNames    []string
 	Fingerprint []byte
+}
+
+type SSLVerifyClient struct {
+
+	ClientCertificate   []byte
 }
 
 func ListBalancers() ([]Balancer, error) {
@@ -135,6 +141,8 @@ func (l *Balancer) Put() error {
 		l.Settings.SSLOptions.PrivateKey = nil
 		l.Settings.SSLOptions.DNSNames = nil
 		l.Settings.SSLOptions.Fingerprint = nil
+		l.Settings.SSLVerifyClient.ClientCertificate = nil
+		l.Settings.SSLOptions.SSLVerify = "off"
 	}
 	return DB.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("balancers"))
