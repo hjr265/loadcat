@@ -43,9 +43,10 @@ server {
 	server_name  {{.Balancer.Settings.Hostname}};
 
 	{{if eq .Balancer.Settings.Protocol "https"}}
-		ssl                  on;
+
 		ssl_certificate      /var/lib/loadcat/out/{{.Balancer.Id.Hex}}/server.crt;
 		ssl_certificate_key  /var/lib/loadcat/out/{{.Balancer.Id.Hex}}/server.key;
+
 	{{end}}
 
 	location / {

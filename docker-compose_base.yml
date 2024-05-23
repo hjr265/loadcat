@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  web:
+    build:
+      context: .
+      dockerfile: ./docker/base/Dockerfile
+    ports:
+      - "26590:26590"
+      - "80:80"
+      - "443:443"
+    volumes:
+      - loadcat:/var/lib/loadcat
+      - ./loadcatd:/usr/bin/loadcatd
+      - ./ui/templates:/var/lib/loadcat/ui/templates
+    working_dir: /var/lib/loadcat
+    command: loadcatd -config /etc/loadcat.conf
+    restart: unless-stopped
+
+volumes:
+  loadcat:
+    driver: "local"
