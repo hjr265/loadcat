@@ -104,11 +104,13 @@ func ServeBalancerEditForm(w http.ResponseWriter, r *http.Request) {
 	err = TplBalancerEditForm.Execute(w, struct {
 		Balancer     *data.Balancer
 		Protocols    []data.Protocol
+		SSLVerifys   []data.SSLVerify
 		Algorithms   []data.Algorithm
 		CipherSuites []data.CipherSuite
 	}{
 		Balancer:     bal,
 		Protocols:    data.Protocols,
+		SSLVerifys:   data.SSLVerifys,
 		Algorithms:   data.Algorithms,
 		CipherSuites: data.CipherSuites,
 	})
@@ -144,7 +146,11 @@ func HandleBalancerUpdate(w http.ResponseWriter, r *http.Request) {
 				CipherSuite string  `schema:"cipher_suite"`
 				Certificate *string `schema:"certificate"`
 				PrivateKey  *string `schema:"private_key"`
+				SSLVerify    string `schema:"sslverify"`
 			} `schema:"ssl_options"`
+			SSLVerifyClient struct {
+				ClientCertificate *string `schema:"clientcertificate"`
+			}
 		} `schema:"settings"`
 	}{}
 	err = schema.NewDecoder().Decode(&body, r.PostForm)
@@ -160,6 +166,13 @@ func HandleBalancerUpdate(w http.ResponseWriter, r *http.Request) {
 	bal.Settings.Algorithm = data.Algorithm(body.Settings.Algorithm)
 	if body.Settings.Protocol == "https" {
 		bal.Settings.SSLOptions.CipherSuite = "recommended"
+		bal.Settings.SSLOptions.SSLVerify = "off"
+		if body.Settings.SSLOptions.SSLVerify == "on" {
+			bal.Settings.SSLOptions.SSLVerify = data.SSLVerify(body.Settings.SSLOptions.SSLVerify)
+			if body.Settings.SSLVerifyClient.ClientCertificate != nil {
+				bal.Settings.SSLVerifyClient.ClientCertificate = []byte(*body.Settings.SSLVerifyClient.ClientCertificate)
+			}
+		}
 		if body.Settings.SSLOptions.Certificate != nil {
 			bal.Settings.SSLOptions.Certificate = []byte(*body.Settings.SSLOptions.Certificate)
 		}
