@@ -6,7 +6,7 @@ import (
 	"crypto/sha1"
 	"crypto/x509"
 	"encoding/pem"
-
+	"os"
 	"github.com/boltdb/bolt"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -23,15 +23,21 @@ type BalancerSettings struct {
 	Protocol   Protocol
 	Algorithm  Algorithm
 	SSLOptions SSLOptions
+	SSLVerifyClient SSLVerifyClient
 }
 
 type SSLOptions struct {
 	CipherSuite CipherSuite
 	Certificate []byte
 	PrivateKey  []byte
-
+	SSLVerify	SSLVerify
 	DNSNames    []string
 	Fingerprint []byte
+}
+
+type SSLVerifyClient struct {
+
+	ClientCertificate   []byte
 }
 
 func ListBalancers() ([]Balancer, error) {
@@ -76,6 +82,30 @@ func GetBalancer(id bson.ObjectId) (*Balancer, error) {
 	return bal, nil
 }
 
+func (b *Balancer) Delete() error {
+    servers, err := b.Servers()
+    if err != nil {
+        return err
+    }
+    for _, server := range servers {
+        err := server.Delete()
+        if err != nil {
+            return err
+        }
+    }
+
+    dirPath := "/var/lib/loadcat/out/" + b.Id.Hex()
+    err = os.RemoveAll(dirPath)
+    if err != nil {
+        return err
+    }
+
+    return DB.Update(func(tx *bolt.Tx) error {
+        bucket := tx.Bucket([]byte("balancers"))
+        return bucket.Delete([]byte(b.Id.Hex()))
+    })
+}
+
 func (l *Balancer) Servers() ([]Server, error) {
 	return ListServersByBalancer(l)
 }
@@ -111,6 +141,8 @@ func (l *Balancer) Put() error {
 		l.Settings.SSLOptions.PrivateKey = nil
 		l.Settings.SSLOptions.DNSNames = nil
 		l.Settings.SSLOptions.Fingerprint = nil
+		l.Settings.SSLVerifyClient.ClientCertificate = nil
+		l.Settings.SSLOptions.SSLVerify = "off"
 	}
 	return DB.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("balancers"))
