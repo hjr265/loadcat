@@ -6,7 +6,7 @@ require (
 	github.com/boltdb/bolt v1.3.1
 	github.com/coreos/go-systemd/v22 v22.3.2
 	github.com/gorilla/mux v1.8.0
-	github.com/gorilla/schema v1.2.0
+	github.com/gorilla/schema v1.4.1
 	github.com/kylelemons/godebug v1.1.0 // indirect
 	github.com/naoina/go-stringutil v0.1.0 // indirect
 	github.com/naoina/toml v0.1.1
