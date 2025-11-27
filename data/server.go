@@ -69,6 +69,13 @@ func (s *Server) Balancer() (*Balancer, error) {
 	return GetBalancer(s.BalancerId)
 }
 
+func (s *Server) Delete() error {
+    return DB.Update(func(tx *bolt.Tx) error {
+        b := tx.Bucket([]byte("servers"))
+        return b.Delete([]byte(s.Id.Hex()))
+    })
+}
+
 func (s *Server) Put() error {
 	if !s.Id.Valid() {
 		s.Id = bson.NewObjectId()
