@@ -9,7 +9,7 @@ github.com/godbus/dbus/v5
 # github.com/gorilla/mux v1.8.0
 ## explicit
 github.com/gorilla/mux
-# github.com/gorilla/schema v1.2.0
+# github.com/gorilla/schema v1.4.1
 ## explicit
 github.com/gorilla/schema
 # github.com/kylelemons/godebug v1.1.0
